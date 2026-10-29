@@ -1,0 +1,33 @@
+@Nhom3ConCa_HostAddress = http://localhost:5188
+@accessToken = replace-with-access-token
+
+### Register a student
+POST {{Nhom3ConCa_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "fullName": "Nguyen Van A",
+  "email": "student@example.com",
+  "password": "Student@12345"
+}
+
+### Login (returns accessToken and refreshToken)
+POST {{Nhom3ConCa_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "emailOrUsername": "student@example.com",
+  "password": "Student@12345"
+}
+
+### Current user
+GET {{Nhom3ConCa_HostAddress}}/api/auth/me
+Authorization: Bearer {{accessToken}}
+
+### Browse courses
+GET {{Nhom3ConCa_HostAddress}}/api/courses
+Authorization: Bearer {{accessToken}}
+
+### Browse class schedule
+GET {{Nhom3ConCa_HostAddress}}/api/class-sessions
+Authorization: Bearer {{accessToken}}
