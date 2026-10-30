@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Nhom3ConCa.Data;
+using Nhom3ConCa.DTOs;
 
 namespace Nhom3ConCa.Controllers;
 
@@ -31,6 +32,8 @@ public class StudentsController(ApplicationDbContext db) : ControllerBase
         return Ok(students);
     }
 
+    
+
     [HttpGet("me")]
     [Authorize(Roles = "Student")]
     public async Task<IActionResult> GetMe()
@@ -49,6 +52,31 @@ public class StudentsController(ApplicationDbContext db) : ControllerBase
             })
             .SingleOrDefaultAsync();
         return student is null ? NotFound(new { message = "Không tìm thấy hồ sơ sinh viên." }) : Ok(student);
+    }
+
+    [HttpPut("me")]
+    [Authorize(Roles = "Student")]
+    public async Task<IActionResult> UpdateMyProfile([FromBody] UpdateStudentProfileDto dto)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var student = await db.Students
+            .Include(item => item.User)
+            .SingleOrDefaultAsync(item => item.UserId == userId);
+        if (student is null)
+        {
+            return NotFound(new { message = "Không tìm thấy hồ sơ sinh viên." });
+        }
+
+        student.User.FullName = dto.FullName.Trim();
+        student.Department = dto.Department?.Trim();
+
+        await db.SaveChangesAsync();
+        return Ok(new
+        {
+            message = "Cập nhật hồ sơ thành công.",
+            fullName = student.User.FullName,
+            department = student.Department
+        });
     }
 
     [HttpGet("me/courses")]

@@ -31,3 +31,20 @@ Authorization: Bearer {{accessToken}}
 ### Browse class schedule
 GET {{Nhom3ConCa_HostAddress}}/api/class-sessions
 Authorization: Bearer {{accessToken}}
+
+### Update a course (Admin)
+PUT {{Nhom3ConCa_HostAddress}}/api/courses/1
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "code": "MMT101",
+  "name": "Lập trình Di động Flutter",
+  "description": "Môn học lập trình ứng dụng di động.",
+  "credits": 3,
+  "teacherId": 1
+}
+
+### Delete a course (Admin)
+DELETE {{Nhom3ConCa_HostAddress}}/api/courses/1
+Authorization: Bearer {{accessToken}}

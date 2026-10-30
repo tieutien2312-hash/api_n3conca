@@ -149,7 +149,10 @@ public static class DbInitializer
         }
 
         var attendanceSession = await context.AttendanceSessions
-            .SingleOrDefaultAsync(item => item.ClassSessionId == classSession.Id);
+            .Where(item => item.ClassSessionId == classSession.Id)
+            .OrderByDescending(item => item.CreatedAt)
+            .ThenByDescending(item => item.Id)
+            .FirstOrDefaultAsync();
         if (attendanceSession is null)
         {
             context.AttendanceSessions.Add(new AttendanceSession
